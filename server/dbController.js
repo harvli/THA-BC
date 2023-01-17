@@ -1,5 +1,7 @@
 import db from './db.js'
 
+// Controller to handle middleware functionality
+
 const dbController = {};
 
 dbController.getShifts = (req, res, next) => {
@@ -12,5 +14,16 @@ dbController.getShifts = (req, res, next) => {
     })
     .catch((err) => next(err));
 } 
+
+dbController.overlap = async (req, res, next) => {
+  const shiftA = req.body.SHIFT_A;
+  const shiftB = req.body.SHIFT_B;
+  try {
+    console.log(shiftA, shiftB);
+    next();
+  } catch (err) {
+    next(err);
+  }
+}
 
 export default dbController;

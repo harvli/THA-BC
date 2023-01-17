@@ -6,6 +6,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Establish route at root path for dbRouter to organize requests
 app.use('/', dbRouter);
 
 app.use('*', (req, res) => {
@@ -24,5 +25,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-	console.log(`************************* EXPRESS server is listening on http://localhost:${port}/`);
+	console.log(`************* EXPRESS server is listening on http://localhost:${port}/`);
 });
