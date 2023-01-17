@@ -1,34 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useEffect, useState } from 'react';
+import './App.css';
+import Shifts from './components/Shifts.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+	const [shifts, setShifts] = useState([]);
+	// render shifts on render
+	useEffect(() => {
+		console.log('useEffect launch');
+		fetch('http://localhost:3000/q1_shifts', {
+			headers: { 'Content-Type': 'application/json' },
+		})
+			.then((data) => data.json())
+			.then((data) => {
+				setShifts(data);
+			})
+			.catch((err) => console.log('Fetch Error: ', err));
+	}, []);
+	// select two shifts to update overlap minutes
+	console.log('shifts', shifts);
+  const shiftsArr = [];
+  for (let i = 0; i < shifts.length; i++){
+    shiftsArr.push(<Shifts info={shifts[i]} key={i}></Shifts>)
+  }
+	return (
+		<div className='App'>
+			<h1>hi</h1>
+			<div className='shiftContainer'>
+        {shiftsArr}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+		</div>
+	);
 }
 
-export default App
+export default App;

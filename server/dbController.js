@@ -34,6 +34,27 @@ dbController.overlap = async (req, res, next) => {
 	} catch (err) {
 		next(err);
 	}
+
+  /*
+{
+    "SHIFT_A": {
+        "shift_id": 1,
+        "facility_id": 100,
+        "shift_date": "2022-10-01T04:00:00.000Z",
+        "start_time": "07:00:00",
+        "end_time": "15:30:00",
+        "facility_name": "Facility A"
+    },
+    "SHIFT_B": {
+        "shift_id": 2,
+        "facility_id": 100,
+        "shift_date": "2022-10-01T04:00:00.000Z",
+        "start_time": "15:00:00",
+        "end_time": "23:00:00",
+        "facility_name": "Facility A"
+    }
+}
+  */
 };
 
 export default dbController;
