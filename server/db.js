@@ -1,5 +1,5 @@
 import path from "path";
-import Pool from "pg";
+import { Pool } from "pg";
 import dotenv from "dotenv";
 
 dotenv.config({
@@ -7,14 +7,14 @@ dotenv.config({
 })
 
 const PGURI = process.env.PGURI
-
+console.log(PGURI)
 const pool = new Pool({
   connectionString: PGURI
 })
 
-module.exports = {
+export const db = {
   query: (text, params, callback) => {
-    console.log('executed query', text);
+    console.log('Executed query: ', text);
     return pool.query(text, params, callback);
   },
 };
