@@ -1,12 +1,12 @@
 import express from 'express';
-import dbController from './dbController';
+import dbController from './dbController.js';
 import path from 'path';
 
-const router = express.Router();
-router.use(express.json());
+const dbRouter = express.Router();
+dbRouter.use(express.json());
 
-router.get('/q1_shifts', dbController.getShifts, (req, res) => {
-  return res.status(200).json()
-})
+dbRouter.get('/q1_shifts', dbController.getShifts, (req, res) => {
+	return res.status(200).json();
+});
 
-export default router;
+export default dbRouter;
