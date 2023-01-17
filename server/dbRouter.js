@@ -6,7 +6,7 @@ const dbRouter = express.Router();
 dbRouter.use(express.json());
 
 dbRouter.get('/q1_shifts', dbController.getShifts, (req, res) => {
-	return res.status(200).json();
+	return res.status(200).json(res.locals.data);
 });
 
 export default dbRouter;
