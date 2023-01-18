@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 function Shifts({ info, selected, setSelected }) {
 	const [start, setStart] = useState();
 	const [end, setEnd] = useState();
+	const [highlight, setHightlight] = useState(false);
 
 	useEffect(() => {
 		function convertTo12H(time) {
@@ -20,6 +21,14 @@ function Shifts({ info, selected, setSelected }) {
 		setStart(convertTo12H(info.start_time));
 		setEnd(convertTo12H(info.end_time));
 	}, []);
+
+	useEffect(() => {
+		if (selected.includes(info)) {
+			setHightlight(true);
+		} else {
+			setHightlight(false);
+		}
+	}, [selected]);
 
 	const selectShifts = () => {
 		console.log('shift selected', info);
@@ -43,7 +52,7 @@ function Shifts({ info, selected, setSelected }) {
 	};
 	console.log(selected, selected.length);
 	return (
-		<button className='shift' onClick={selectShifts}>
+		<button className={highlight ? 'shiftHighlight' : 'shift'} onClick={selectShifts}>
 			{/* <p>Shift ID: {info.shift_id}</p>
 			<p>Facility ID: {info.facility_id}</p> */}
 			<p>{info.facility_name}</p>

@@ -46,7 +46,7 @@ function App() {
 	// 		setOverlap({ overlapMins: '0', maxOverlap: '0', exceedsOverlap: 'N/A' });
 	// 	}
 	// }, [selected]);
-  const updateOverlap = () => {
+	const updateOverlap = () => {
 		if (selected.length === 2) {
 			fetch('http://localhost:3000/api/overlapThreshold', {
 				method: 'POST',
@@ -85,7 +85,9 @@ function App() {
 				<p>Overlap Minutes: {overlap.overlapMins ?? 0} minutes</p>
 				<p>Maximum Overlap Threshold: {`${overlap.maxOverlap}`} minutes</p>
 				<p>Exceeds Overlap Threshold: {`${overlap.exceedsOverlap}`.toUpperCase()}</p>
-				<button className='submitButton' onClick={updateOverlap}>Submit</button>
+				<button className='submitButton' onClick={updateOverlap}>
+					Submit
+				</button>
 			</div>
 			<div className='shiftContainer'>{shiftsArr}</div>
 		</div>
