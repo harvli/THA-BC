@@ -9,7 +9,6 @@ dbController.getShifts = (req, res, next) => {
 		'SELECT * FROM "question_one_shifts" INNER JOIN "facilities" ON question_one_shifts.facility_id = facilities.facility_id';
 	db.query(text)
 		.then((data) => {
-			console.log(data.rows);
 			res.locals.data = data.rows;
 			next();
 		})
@@ -18,24 +17,104 @@ dbController.getShifts = (req, res, next) => {
 
 dbController.overlap = async (req, res, next) => {
 	try {
-		const shiftA = req.body.SHIFT_A;
-		const shiftB = req.body.SHIFT_B;
+		console.log('req', req.body);
+		const { SHIFT_A, SHIFT_B } = req.body;
 		let maxOverlap;
-		if (shiftA.facility_id == shiftB.facility_id) maxOverlap = 30;
+		if (SHIFT_A.facility_id == SHIFT_B.facility_id) maxOverlap = 30;
 		else maxOverlap = 0;
-		let overlapMins;
-		if (shiftB.start_time.slice(0, 2) === shiftA.end_time.slice(0, 2)) {
-			overlapMins = Math.abs(shiftA.end_time.slice(3, 5) - shiftB.start_time.slice(3, 5));
+		let overlapMins = 0;
+
+		let shiftA_startTime =
+			parseInt(SHIFT_A.start_time.slice(0, 2)) + parseInt(SHIFT_A.start_time.slice(3, 5)) / 60;
+
+		let shiftA_endTime =
+			parseInt(SHIFT_A.end_time.slice(0, 2)) + parseInt(SHIFT_A.end_time.slice(3, 5)) / 60;
+		let shiftB_startTime =
+			parseInt(SHIFT_B.start_time.slice(0, 2)) + parseInt(SHIFT_B.start_time.slice(3, 5)) / 60;
+		let shiftB_endTime =
+			parseInt(SHIFT_B.end_time.slice(0, 2)) + parseInt(SHIFT_B.end_time.slice(3, 5)) / 60;
+		console.log('hi');
+		console.log('boo', shiftA_startTime, shiftA_endTime, shiftB_startTime, shiftB_endTime);
+		console.log(SHIFT_A.shift_date.slice(8, 10));
+		// overlap for overnight shifts edge case
+		if (
+			shiftA_startTime > shiftA_endTime &&
+			parseInt(SHIFT_A.shift_date.slice(8, 10)) + 1 === parseInt(SHIFT_B.shift_date.slice(8, 10))
+		) {
+			if (shiftB_startTime > shiftA_endTime) overlapMins = 0;
+			else overlapMins = (shiftA_endTime - shiftB_startTime) * 60;
+		} else if (
+			// if A and B were swapped
+			shiftB_startTime > shiftB_endTime &&
+			parseInt(SHIFT_B.shift_date.slice(8, 10)) + 1 === parseInt(SHIFT_A.shift_date.slice(8, 10))
+		) {
+			if (shiftA_startTime > shiftB_endTime) overlapMins = 0;
+			else overlapMins = (shiftB_endTime - shiftA_startTime) * 60;
+		} else if (SHIFT_A.shift_date.slice(8, 10) === SHIFT_B.shift_date.slice(8, 10)) {
+			if (
+				// if same hour
+				SHIFT_B.start_time.slice(0, 2) === SHIFT_A.end_time.slice(0, 2) ||
+				SHIFT_A.start_time.slice(0, 2) === SHIFT_B.end_time.slice(0, 2)
+			) {
+				overlapMins = Math.max(
+					Math.abs(
+						parseInt(SHIFT_A.end_time.slice(3, 5)) - parseInt(SHIFT_B.start_time.slice(3, 5))
+					),
+					Math.abs(
+						parseInt(SHIFT_A.start_time.slice(3, 5)) - parseInt(SHIFT_B.end_time.slice(3, 5))
+					)
+				);
+			} else if (
+				shiftB_startTime < shiftA_endTime &&
+				shiftB_startTime > shiftA_startTime &&
+				shiftB_endTime > shiftA_endTime
+			) {
+				// if big overlap
+				overlapMins = (shiftA_endTime - shiftB_startTime) * 60;
+			} else if (
+				shiftA_startTime < shiftB_endTime &&
+				shiftA_startTime > shiftB_startTime &&
+				shiftA_endTime > shiftB_endTime
+			) {
+				// if big overlap for other selected order
+				overlapMins = (shiftB_endTime - shiftA_startTime) * 60;
+			}
 		}
+    // Harvey's Dev Notes: Overall logic is sound, calculates overlap minutes while considering edge cases.
+
+		// for overnight shifts edge cases
+		// if (SHIFT_A.start_time.slice(0, 2) > SHIFT_A.end_time.slice(0, 2)) {
+		// 	if (
+		// 		SHIFT_A.end_time.slice(0, 2) > SHIFT_B.start_time.slice(0, 2) ||
+		// 		(SHIFT_A.end_time.slice(0, 2) === SHIFT_B.start_time.slice(0, 2) &&
+		// 			SHIFT_A.end_time.slice(3, 5) > SHIFT_A.end_time.slice(3, 5))
+		// 	) {
+		// 		overlapMins =
+		// 			parseInt(SHIFT_A.end_time.slice(3, 5)) - parseInt(SHIFT_B.start_time.slice(3, 5));
+		// 	} else {
+		// 		overlapMins = 0;
+		// 	}
+		// } else if (SHIFT_B.start_time.slice(0, 2) > SHIFT_B.end_time.slice(0, 2)) {
+		// 	abc;
+		// } else if (
+		// 	SHIFT_B.start_time.slice(0, 2) === SHIFT_A.end_time.slice(0, 2) ||
+		// 	SHIFT_A.start_time.slice(0, 2) === SHIFT_B.end_time.slice(0, 2)
+		// ) {
+		// 	overlapMins = Math.max(
+		// 		Math.abs(parseInt(SHIFT_A.end_time.slice(3, 5)) - parseInt(SHIFT_B.start_time.slice(3, 5))),
+		// 		Math.abs(parseInt(SHIFT_A.start_time.slice(3, 5)) - parseInt(SHIFT_B.end_time.slice(3, 5)))
+		// 	);
+		// }
+
 		let exceedsOverlap = overlapMins > maxOverlap;
-    res.locals.overlap = {shiftA, shiftB, overlapMins, maxOverlap, exceedsOverlap};
-    console.log(res.locals.overlap)
+		res.locals.overlap = { SHIFT_A, SHIFT_B, overlapMins, maxOverlap, exceedsOverlap };
+		console.log(res.locals.overlap);
 		next();
 	} catch (err) {
 		next(err);
 	}
 
-  /*
+	/*
 {
     "SHIFT_A": {
         "shift_id": 1,

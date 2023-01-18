@@ -5,11 +5,11 @@ const app = express();
 
 const port = 3000;
 app.use(express.json());
-app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 // Establish route at root path for dbRouter to organize requests
-app.use('/', dbRouter);
+app.use('/api', dbRouter);
 
 app.use('*', (req, res) => {
 	return res.status(404);
