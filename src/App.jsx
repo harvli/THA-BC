@@ -24,28 +24,37 @@ function App() {
 			.catch((err) => console.log('Fetch Error: ', err));
 	}, []);
 
-	// useEffect(() => {
-	// 	console.log('second use effect', selected.length);
-	// 	if (selected.length === 2) {
-	// 		fetch('http://localhost:3000/api/overlapThreshold', {
-	// 			method: 'POST',
-	// 			headers: {
-	// 				'Content-Type': 'application/json',
-	// 			},
-	// 			body: JSON.stringify({
-	// 				SHIFT_A: selected[0],
-	// 				SHIFT_B: selected[1],
-	// 			}),
-	// 		})
-	// 			.then((data) => data.json())
-	// 			.then((data) => {
-	// 				setOverlap(data);
-	// 			})
-	// 			.catch((err) => console.log('Fetch Error: ', err));
-	// 	} else {
-	// 		setOverlap({ overlapMins: '0', maxOverlap: '0', exceedsOverlap: 'N/A' });
-	// 	}
-	// }, [selected]);
+	const exeQ4 = () => {
+    fetch('/api/q4', {
+			headers: { 'Content-Type': 'application/json' },
+		})
+			.then((data) => data.json())
+			.then((data) => {
+				setShifts(data);
+			})
+			.catch((err) => console.log('Fetch Error: ', err));
+  };
+	const exeQ5 = () => {
+    fetch('/api/q5', {
+			headers: { 'Content-Type': 'application/json' },
+		})
+			.then((data) => data.json())
+			.then((data) => {
+				setShifts(data);
+			})
+			.catch((err) => console.log('Fetch Error: ', err));
+  };
+	const exeQ6 = () => {
+    fetch('/api/q6', {
+			headers: { 'Content-Type': 'application/json' },
+		})
+			.then((data) => data.json())
+			.then((data) => {
+				setShifts(data);
+			})
+			.catch((err) => console.log('Fetch Error: ', err));
+  };
+  
 	const updateOverlap = () => {
 		if (selected.length === 2) {
 			fetch('http://localhost:3000/api/overlapThreshold', {
@@ -78,6 +87,15 @@ function App() {
 	return (
 		<div className='App'>
 			<h1>Harvey Li</h1>
+			<button className='q4Button' onClick={exeQ4}>
+				Execute Q4 Query
+			</button>
+			<button className='q5Button' onClick={exeQ5}>
+				Execute Q5 Query
+			</button>
+			<button className='q6Button' onClick={exeQ6}>
+				Execute Q6 Query
+			</button>
 			<div className='overlapContainer'>
 				{/* <p>
 					Shifts Selected: {selected[0].shift_id} {selected[1].shift_id}

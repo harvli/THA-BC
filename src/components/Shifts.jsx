@@ -53,8 +53,6 @@ function Shifts({ info, selected, setSelected }) {
 	console.log(selected, selected.length);
 	return (
 		<button className={highlight ? 'shiftHighlight' : 'shift'} onClick={selectShifts}>
-			{/* <p>Shift ID: {info.shift_id}</p>
-			<p>Facility ID: {info.facility_id}</p> */}
 			<p>{info.facility_name}</p>
 			<p>{info.shift_date.slice(0, 10)}</p>
 			<p>

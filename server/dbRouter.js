@@ -13,5 +13,14 @@ dbRouter.get('/q1_shifts', dbController.getShifts, (req, res) => {
 dbRouter.post('/overlapThreshold', dbController.overlap, (req, res) => {
 	return res.status(200).json(res.locals.overlap);
 });
+dbRouter.get('/q4', dbController.q4, (req, res) => {
+	return res.status(200).json(res.locals.q4);
+});
+dbRouter.get('/q5', dbController.q5, (req, res) => {
+	return res.status(200).json(res.locals.q5);
+});
+dbRouter.get('/q6', dbController.q6, (req, res) => {
+	return res.status(200).json(res.locals.q6);
+});
 
 export default dbRouter;

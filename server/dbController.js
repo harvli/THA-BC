@@ -69,42 +69,18 @@ dbController.overlap = async (req, res, next) => {
 				shiftB_startTime > shiftA_startTime &&
 				shiftB_endTime > shiftA_endTime
 			) {
-				// if big overlap
+				// if overlap is larger than an hour
 				overlapMins = (shiftA_endTime - shiftB_startTime) * 60;
 			} else if (
 				shiftA_startTime < shiftB_endTime &&
 				shiftA_startTime > shiftB_startTime &&
 				shiftA_endTime > shiftB_endTime
 			) {
-				// if big overlap for other selected order
+				// other selected order for if overlap is larger than an hour
 				overlapMins = (shiftB_endTime - shiftA_startTime) * 60;
 			}
 		}
     // Harvey's Dev Notes: Overall logic is sound, calculates overlap minutes while considering edge cases.
-
-		// for overnight shifts edge cases
-		// if (SHIFT_A.start_time.slice(0, 2) > SHIFT_A.end_time.slice(0, 2)) {
-		// 	if (
-		// 		SHIFT_A.end_time.slice(0, 2) > SHIFT_B.start_time.slice(0, 2) ||
-		// 		(SHIFT_A.end_time.slice(0, 2) === SHIFT_B.start_time.slice(0, 2) &&
-		// 			SHIFT_A.end_time.slice(3, 5) > SHIFT_A.end_time.slice(3, 5))
-		// 	) {
-		// 		overlapMins =
-		// 			parseInt(SHIFT_A.end_time.slice(3, 5)) - parseInt(SHIFT_B.start_time.slice(3, 5));
-		// 	} else {
-		// 		overlapMins = 0;
-		// 	}
-		// } else if (SHIFT_B.start_time.slice(0, 2) > SHIFT_B.end_time.slice(0, 2)) {
-		// 	abc;
-		// } else if (
-		// 	SHIFT_B.start_time.slice(0, 2) === SHIFT_A.end_time.slice(0, 2) ||
-		// 	SHIFT_A.start_time.slice(0, 2) === SHIFT_B.end_time.slice(0, 2)
-		// ) {
-		// 	overlapMins = Math.max(
-		// 		Math.abs(parseInt(SHIFT_A.end_time.slice(3, 5)) - parseInt(SHIFT_B.start_time.slice(3, 5))),
-		// 		Math.abs(parseInt(SHIFT_A.start_time.slice(3, 5)) - parseInt(SHIFT_B.end_time.slice(3, 5)))
-		// 	);
-		// }
 
 		let exceedsOverlap = overlapMins > maxOverlap;
 		res.locals.overlap = { SHIFT_A, SHIFT_B, overlapMins, maxOverlap, exceedsOverlap };
@@ -113,6 +89,37 @@ dbController.overlap = async (req, res, next) => {
 	} catch (err) {
 		next(err);
 	}
+
+  dbController.q4 = (req, res, next) => {
+    const text =
+      'SELECT * FROM "question_one_shifts" INNER JOIN "facilities" ON question_one_shifts.facility_id = facilities.facility_id';
+    db.query(text)
+      .then((data) => {
+        res.locals.q4 = data.rows;
+        next();
+      })
+      .catch((err) => next(err));
+  };
+  dbController.q5 = (req, res, next) => {
+    const text =
+      'SELECT * FROM "question_one_shifts" INNER JOIN "facilities" ON question_one_shifts.facility_id = facilities.facility_id';
+    db.query(text)
+      .then((data) => {
+        res.locals.q5 = data.rows;
+        next();
+      })
+      .catch((err) => next(err));
+  };
+  dbController.q6 = (req, res, next) => {
+    const text =
+      'SELECT * FROM "question_one_shifts" INNER JOIN "facilities" ON question_one_shifts.facility_id = facilities.facility_id';
+    db.query(text)
+      .then((data) => {
+        res.locals.q6 = data.rows;
+        next();
+      })
+      .catch((err) => next(err));
+  };
 
 	/*
 {

@@ -1,4 +1,4 @@
-import path, { dirname }  from 'path';
+import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 import pkg from 'pg';

@@ -57,3 +57,28 @@
 	top: 70px;
 	right: 10%;
 }
+
+.q4Button,
+.q5Button,
+.q6Button {
+	border-radius: 10px;
+	color: white;
+	border: 1.5px solid rgb(255, 255, 255);
+	padding: 10px;
+	font-size: 12px;
+}
+.q4Button {
+	position: absolute;
+	top: 15px;
+	right: 31%;
+}
+.q5Button {
+	position: absolute;
+	top: 15px;
+	right: 16%;
+}
+.q6Button {
+	position: absolute;
+	top: 15px;
+	right: 1%;
+}
