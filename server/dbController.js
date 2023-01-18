@@ -90,9 +90,14 @@ dbController.overlap = async (req, res, next) => {
 		next(err);
 	}
 };
+// ** Important Find on Assignment **
+// One thing I noticed while working on the last 3 questions of the assessment, nurse_ID: 1010, Mark is an RN in the Pre-interview Environment Setup Instructions given as (1010,'Mark','RN'). However the RN position filled a LPN role as shown: (206,101,'LPN',2), (206,1010), with the Job_ID 206 requiring a LPN, but Mark is an RN. However, on the technical interview sheet Version B, Mark is an LPN nurse type. This is just one inconsistency I noticed, so the results will be a bit different than what is expected.
 
 dbController.q4 = (req, res, next) => {
-	const text = 'SELECT * FROM "facilities"';
+	const text = `SELECT jobs.*,
+	jobs.total_number_nurses_needed - (SELECT COUNT(*) FROM nurse_hired_jobs WHERE job_id = jobs.job_id) as remaining_jobs
+	FROM jobs
+	ORDER BY facility_id, nurse_type_needed;`;
 	db.query(text)
 		.then((data) => {
 			res.locals.q4 = data.rows;
@@ -102,7 +107,19 @@ dbController.q4 = (req, res, next) => {
 };
 
 dbController.q5 = (req, res, next) => {
-	const text = 'SELECT * FROM "facilities"';
+	const text = `WITH remaining_jobs AS (
+    SELECT jobs.*,
+		jobs.total_number_nurses_needed - (SELECT COUNT(*) FROM nurse_hired_jobs WHERE job_id = jobs.job_id) as remaining_spots
+		FROM jobs
+		ORDER BY facility_id, nurse_type_needed
+	)
+
+	SELECT nurses.nurse_id, nurses.nurse_name, nurses.nurse_type, COUNT(remaining_jobs.remaining_spots) AS total_jobs
+	FROM nurses
+	LEFT JOIN remaining_jobs ON nurses.nurse_type = remaining_jobs.nurse_type_needed
+	WHERE remaining_jobs.remaining_spots > 0
+	GROUP BY nurses.nurse_id, nurses.nurse_name, nurses.nurse_type
+	ORDER BY nurse_type`;
 	db.query(text)
 		.then((data) => {
 			res.locals.q5 = data.rows;
@@ -112,7 +129,20 @@ dbController.q5 = (req, res, next) => {
 };
 
 dbController.q6 = (req, res, next) => {
-	const text = 'SELECT * FROM "facilities"';
+	const text = `WITH person_facility AS (
+		SELECT j.facility_id FROM nurse_hired_jobs nhj
+		JOIN nurses n ON nhj.nurse_id = n.nurse_id
+		JOIN jobs j ON nhj.job_id = j.job_id
+		WHERE n.nurse_name = 'Anne'
+		),
+		co_workers AS (
+		SELECT DISTINCT n.nurse_name FROM nurse_hired_jobs nhj
+		JOIN nurses n ON nhj.nurse_id = n.nurse_id
+		JOIN jobs j ON nhj.job_id = j.job_id
+		JOIN person_facility af ON j.facility_id = af.facility_id
+		WHERE n.nurse_name != 'Anne'
+		)
+		SELECT * FROM co_workers;`;
 	db.query(text)
 		.then((data) => {
 			res.locals.q6 = data.rows;
