@@ -1,6 +1,7 @@
-# THA-BC
+# Take Home Assessment - BC
 
 ### Hi there! My name is Harvey and I'm passionate Software Engineer. I hope you will enjoy taking a lot at my take home assessment as much as I enjoyed developing it!
+
 <br/>
 Here are the short and easy steps to get the application up and running:
 
