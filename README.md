@@ -11,7 +11,7 @@ Fork and clone this repo
 
 </br>
 <br/>
-## Install the dependencies with this command in your terminal in the directory of this repo:
+Install the dependencies with this command in your terminal in the directory of this repo:
 
 ```
 npm i
