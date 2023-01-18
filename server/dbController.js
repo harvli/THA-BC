@@ -150,7 +150,9 @@ dbController.q6 = (req, res, next) => {
 		})
 		.catch((err) => next(err));
 };
+
 /*
+req.body:
 {
     "SHIFT_A": {
         "shift_id": 1,
@@ -170,4 +172,5 @@ dbController.q6 = (req, res, next) => {
     }
 }
   */
+
 export default dbController;
