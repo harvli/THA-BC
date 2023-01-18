@@ -13,7 +13,7 @@ function App() {
 
 	// render shifts on mount
 	useEffect(() => {
-		console.log('useEffect launch');
+		// console.log('useEffect launch');
 		fetch('/api/q1_shifts', {
 			headers: { 'Content-Type': 'application/json' },
 		})
@@ -25,36 +25,36 @@ function App() {
 	}, []);
 
 	const exeQ4 = () => {
-    fetch('/api/q4', {
+		fetch('/api/q4', {
 			headers: { 'Content-Type': 'application/json' },
 		})
 			.then((data) => data.json())
 			.then((data) => {
-				setShifts(data);
+				console.log(data);
 			})
 			.catch((err) => console.log('Fetch Error: ', err));
-  };
+	};
 	const exeQ5 = () => {
-    fetch('/api/q5', {
+		fetch('/api/q5', {
 			headers: { 'Content-Type': 'application/json' },
 		})
 			.then((data) => data.json())
 			.then((data) => {
-				setShifts(data);
+				console.log(data);
 			})
 			.catch((err) => console.log('Fetch Error: ', err));
-  };
+	};
 	const exeQ6 = () => {
-    fetch('/api/q6', {
+		fetch('/api/q6', {
 			headers: { 'Content-Type': 'application/json' },
 		})
 			.then((data) => data.json())
 			.then((data) => {
-				setShifts(data);
+				console.log(data);
 			})
 			.catch((err) => console.log('Fetch Error: ', err));
-  };
-  
+	};
+
 	const updateOverlap = () => {
 		if (selected.length === 2) {
 			fetch('http://localhost:3000/api/overlapThreshold', {
@@ -77,7 +77,6 @@ function App() {
 		}
 	};
 	// select two shifts to update overlap minutes
-	console.log('shifts', shifts);
 	const shiftsArr = [];
 	for (let i = 0; i < shifts.length; i++) {
 		shiftsArr.push(

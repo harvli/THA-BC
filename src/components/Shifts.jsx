@@ -31,7 +31,6 @@ function Shifts({ info, selected, setSelected }) {
 	}, [selected]);
 
 	const selectShifts = () => {
-		console.log('shift selected', info);
 		if (selected.includes(info)) {
 			let index = selected.indexOf(info);
 			setSelected((prevShifts) => {
@@ -50,7 +49,6 @@ function Shifts({ info, selected, setSelected }) {
 			setSelected((prevShifts) => [...prevShifts, info]);
 		}
 	};
-	console.log(selected, selected.length);
 	return (
 		<button className={highlight ? 'shiftHighlight' : 'shift'} onClick={selectShifts}>
 			<p>{info.facility_name}</p>
